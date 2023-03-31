@@ -1,12 +1,13 @@
 <?php
-$ignoreFolders = ['folder 5'];
+$ignoreFolders = ['folder 5', '.git'];
+
 
 function scanDirectory($dir, $ignoreFolders)
 {
     $result = [];
     $files = scandir($dir);
     foreach ($files as $value) {
-        if ($value[0] !== '.' && !in_array($value, $ignoreFolders) && $value !== 'folder 3') {
+        if ($value !== '.' && $value !== '..' && !in_array($value, $ignoreFolders)) {
             $path = $dir . '/' . $value;
             if (is_dir($path)) {
                 $result[] = ['is_dir' => true, 'path' => $path, 'name' => $value];
@@ -21,7 +22,8 @@ function scanDirectory($dir, $ignoreFolders)
 
 $results = scanDirectory('.', $ignoreFolders);
 foreach ($results as $file) {
-    echo $file['path'] . ' - ' . ($file['is_dir']
-        ? '<span style="color:blue;">Directory</span>'
+    echo $file['path'] . ' - ' . ($file['is_dir'] 
+        ? '<span style="color:blue;">Directory</span>' 
         : '<span style="color:green;">File</span>') . '</br>';
 }
+
