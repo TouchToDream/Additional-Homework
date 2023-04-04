@@ -20,6 +20,7 @@ function scanDirectory($dir, $ignoreFolders)
     return $result;
 }
 
+
 $results = scanDirectory('.', $ignoreFolders);
 foreach ($results as $file) {
     echo $file['path'] . ' - ' . ($file['is_dir'] 
