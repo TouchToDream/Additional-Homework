@@ -23,12 +23,10 @@ function scanDirectory($dir, $ignoreFolders)
         if ($value !== '.' && $value !== '..' && !in_array($value, $ignoreFolders)) {
             $path = $dir . '/' . $value;
             if (is_dir($path)) {
-                $items = new Item(true, $path, $value);
-                $result[] = $items;
+                $result[] = new Item(true, $path, $value);
                 $result = array_merge($result, scanDirectory($path, $ignoreFolders));
             } else {
-                $items = new Item(false, $path, $value);
-                $result[] = $items;
+                $result[] = new Item(false, $path, $value);
             }
         }
     }
