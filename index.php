@@ -1,6 +1,19 @@
 <?php
 $ignoreFolders = ['folder 5', '.git'];
 
+class Item
+{
+    public $is_dir;
+    public $path;
+    public $name;
+
+    public function __construct(bool $is_dir, string $path, string $name)
+    {
+        $this->is_dir = $is_dir;
+        $this->path = $path;
+        $this->name = $name;
+    }
+}
 
 function scanDirectory($dir, $ignoreFolders)
 {
@@ -10,10 +23,12 @@ function scanDirectory($dir, $ignoreFolders)
         if ($value !== '.' && $value !== '..' && !in_array($value, $ignoreFolders)) {
             $path = $dir . '/' . $value;
             if (is_dir($path)) {
-                $result[] = ['is_dir' => true, 'path' => $path, 'name' => $value];
+                $items = new Item(true, $path, $value);
+                $result[] = $items;
                 $result = array_merge($result, scanDirectory($path, $ignoreFolders));
             } else {
-                $result[] = ['is_dir' => false, 'path' => $path, 'name' => $value];
+                $items = new Item(false, $path, $value);
+                $result[] = $items;
             }
         }
     }
@@ -23,8 +38,7 @@ function scanDirectory($dir, $ignoreFolders)
 
 $results = scanDirectory('.', $ignoreFolders);
 foreach ($results as $file) {
-    echo $file['path'] . ' - ' . ($file['is_dir'] 
-        ? '<span style="color:blue;">Directory</span>' 
+    echo $file->path . ' - ' . ($file->is_dir
+        ? '<span style="color:blue;">Directory</span>'
         : '<span style="color:green;">File</span>') . '</br>';
 }
-
