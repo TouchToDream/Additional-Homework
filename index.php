@@ -1,19 +1,36 @@
 <?php
+
 $ignoreFolders = ['folder 5', '.git'];
 
 class Item
 {
-    public $is_dir;
     public $path;
     public $name;
-
-    public function __construct(bool $is_dir, string $path, string $name)
+    public function __construct(string $path, string $name)
     {
-        $this->is_dir = $is_dir;
         $this->path = $path;
         $this->name = $name;
     }
 }
+
+class File extends Item
+{
+    public function __construct(string $path, string $name)
+    {
+        parent::__construct($path, $name);
+    }
+}
+
+class Folder extends Item
+{
+    public $is_dir;
+    public function __construct(bool $is_dir, string $path, string $name)
+    {
+        parent::__construct($path, $name);
+        $this->is_dir = $is_dir;
+    }
+}
+
 
 function scanDirectory($dir, $ignoreFolders)
 {
@@ -23,10 +40,10 @@ function scanDirectory($dir, $ignoreFolders)
         if ($value !== '.' && $value !== '..' && !in_array($value, $ignoreFolders)) {
             $path = $dir . '/' . $value;
             if (is_dir($path)) {
-                $result[] = new Item(true, $path, $value);
+                $result[] = new Folder(true, $path, $value);
                 $result = array_merge($result, scanDirectory($path, $ignoreFolders));
             } else {
-                $result[] = new Item(false, $path, $value);
+                $result[] = new File($path, $value);
             }
         }
     }
